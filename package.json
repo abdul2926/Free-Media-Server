@@ -1,0 +1,18 @@
+{
+  "name": "fms",
+  "version": "0.0.1",
+  "description": "Free Media Server (name pending) is a lightweight, easy to use and minimal media server for your local network.",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node ./server/index.ts",
+    "debug": "ts-node-dev --respawn ./server/index.ts"
+  },
+  "author": "abdul2926",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^17.0.5"
+  },
+  "dependencies": {
+    "ts-node-dev": "^1.1.8"
+  }
+}
