@@ -42,7 +42,8 @@ export function handleRequest(request: http.IncomingMessage, response: http.Serv
         case '/':
             direct = 'index.html';
             break;
-        case '/other':
+        case '/settings':
+            direct = 'settings.html';
             break;
         default:
             errorHandler.serveError(404, response);
