@@ -1,19 +1,21 @@
 import * as crypto from 'crypto';
 import * as fs from 'fs';
 
-export function cacheSettings(cache) {
-    cache.set('settings', loadSettings());
-}
+export var settings = loadSettings();
 
-function loadSettings(): JSON {
+function loadSettings(): any { // Has to be of type any or typescript will cry
     try {
         var settings = fs.readFileSync('./settings.json', { encoding: 'utf-8' });
         return JSON.parse(settings);
     } catch (error) {
         var _settings = {
-            "lock" : "",
+            "lock" : {
+                "enabled": false,
+                "hash": ""
+            },
+            "port": "8000",
             "libs" : [
-                "./library"
+                
             ]
         }
         var newSettings = JSON.parse(JSON.stringify(_settings));
@@ -23,7 +25,7 @@ function loadSettings(): JSON {
 }
 
 export function updateSettings(settings: JSON) {
-    fs.writeFile('./settings.json', JSON.stringify(settings), error => {
+    fs.writeFile('./settings.json', JSON.stringify(settings, null, '\t'), error => {
         if (error) {
             console.log('Could not write settings data: ' + error);
         }
