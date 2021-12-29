@@ -2,7 +2,7 @@ import * as http from 'http';
 import * as url from 'url';
 import * as fs from 'fs';
 
-import * as errorHandler from './error';
+import { serveError } from './error';
 
 export function handleRequest(request: http.IncomingMessage, response: http.ServerResponse) {
     var path = url.parse(request.url, true).pathname;
@@ -25,7 +25,7 @@ export function handleRequest(request: http.IncomingMessage, response: http.Serv
     if (contentType != 'text/html') {
         fs.readFile(`./web${path}`, function (err, data) {
             if (err) {
-                errorHandler.serveError(404, response);
+                serveError(404, response);
             } else {
                 response.writeHead(200, {
                     'Content-Type': contentType
@@ -46,13 +46,13 @@ export function handleRequest(request: http.IncomingMessage, response: http.Serv
             direct = 'settings.html';
             break;
         default:
-            errorHandler.serveError(404, response);
+            serveError(404, response);
             return;
     }
 
     fs.readFile(`./web/${direct}`, function (err, data) {
         if (err) {
-            errorHandler.serveError(404, response);
+            serveError(404, response);
             return;
         }
 

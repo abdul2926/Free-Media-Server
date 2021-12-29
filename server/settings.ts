@@ -1,9 +1,9 @@
-import * as crypto from 'crypto';
 import * as fs from 'fs';
+import * as crypto from 'crypto';
 
 export var settings = loadSettings();
 
-function loadSettings(): any { // Has to be of type any or typescript will cry
+function loadSettings(): any { 
     try {
         var settings = fs.readFileSync('./settings.json', { encoding: 'utf-8' });
         return JSON.parse(settings);
@@ -16,7 +16,11 @@ function loadSettings(): any { // Has to be of type any or typescript will cry
             "port": "8000",
             "libs" : [
                 
-            ]
+            ],
+            "auth": [
+
+            ],
+            "secret": crypto.randomBytes(32).toString('hex')
         }
         var newSettings = JSON.parse(JSON.stringify(_settings));
         updateSettings(newSettings);
@@ -30,9 +34,4 @@ export function updateSettings(settings: JSON) {
             console.log('Could not write settings data: ' + error);
         }
     });
-}
-
-function getHash(str: string) {
-    const hasher = crypto.createHmac('sha256', 'fms');
-    return hasher.update(str).digest("hex");
 }
