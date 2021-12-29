@@ -1,6 +1,5 @@
 import * as http from 'http'
 import * as url from 'url';
-import Cookies from 'cookies-ts';
 import * as crypto from 'crypto';
 
 import { settings, updateSettings } from './settings';
@@ -19,38 +18,43 @@ export function handleAPIRequest(request: http.IncomingMessage, response: http.S
     });
 
     request.on('end', () => {
-        const data = JSON.parse(buffer.toString()) as any;
+        var bufferArr = buffer.toString().split('=');
+        var password = bufferArr[bufferArr.length -1];
 
         switch (path) {
             case '/api/updatehash':
                 if (settings.lock.hash) {
-                    updateHash(true, response, data.password);
+                    updateHash(true, request, response, password);
                 } else {
-                    updateHash(false, response, data.password);
+                    updateHash(false, request, response, password);
                 }
                 break;
             case '/api/authenticate':
-                authenticate(data.password, response);
+                authenticate(password, request, response);
                 break;
         }
     });
 }
 
-function authenticated(response: http.ServerResponse) {
-    const cookies = new Cookies();
-    if (!cookies.isKey('auth')) {
-        serveError(401, response);
-        return false;
-    }
-    if (settings.auth.contains(cookies.get('auth'))) {
+function parseCookies (request): any {
+    var cookieList = {}, requestCookies = request.headers.cookie;
+    requestCookies && requestCookies.split(';').forEach(function(cookie) {
+        var parts = cookie.split('=');
+        cookieList[parts.shift().trim()] = decodeURI(parts.join('='));
+    });
+    return cookieList;
+}
+
+function authenticated(request: http.IncomingMessage, response: http.ServerResponse) {
+    if (!settings.auth.includes(parseCookies(request).auth)) {
         serveError(403, response);
         return false;
     }
 }
 
-function updateHash(restricted: boolean, response: http.ServerResponse, password: string) {
+function updateHash(restricted: boolean, request: http.IncomingMessage, response: http.ServerResponse, password: string) {
     if (restricted) {
-        if (!authenticated(response)) {
+        if (!authenticated(request, response)) {
             return;
         }
     }
@@ -61,26 +65,39 @@ function updateHash(restricted: boolean, response: http.ServerResponse, password
     }
 
     const hasher = crypto.createHmac('sha256', settings.secret);
-    const hash = hasher.update(password);
-    settings.lock.hash = hash.toString();
+    var hash = hasher.update(password).digest('hex');
+    settings.lock.hash = hash;
     settings.lock.enabled = true;
     updateSettings(settings);
+
+    response.writeHead(302, {
+        'Location': '/authenticate',
+        'Content-Type' : 'text/html'
+    });
+    response.end();
 }
 
-function authenticate(password: string, response: http.ServerResponse) {
+function authenticate(password: string, request: http.IncomingMessage, response: http.ServerResponse) {
     const hasher = crypto.createHmac('sha256', settings.secret);
-    const hash = hasher.update(password);
+    const hash = hasher.update(password).digest('hex');
     if (hash == settings.lock.hash) {
-        const cookieAuth = hasher.update(crypto.randomBytes(64).toString('hex') + hash);
-        settings.auth.push(cookieAuth.toString());
+        const _hasher = crypto.createHmac('sha256', settings.secret);
+        const cookieAuth = _hasher.update(crypto.randomBytes(64).toString('hex') + hash).digest('hex');
+        settings.auth.push(cookieAuth);
         updateSettings(settings);
-        const cookies = new Cookies();
-        var date = new Date();
-        date.setTime(date.getTime() + 1000*60*24*3); // 3 days
-        cookies.set('auth', cookieAuth.toString(), {
-            expires: date
+        response.writeHead(302, {
+            'Set-Cookie': `auth=${cookieAuth}`,
+            'Content-Type': 'text/html',
+            'Location': '/'
         });
+        response.end();
     } else {
         serveError(401, response);
     }
+
+    response.writeHead(302, {
+        'Location': '/',
+        'Content-Type' : 'text/html'
+    });
+    response.end();
 }

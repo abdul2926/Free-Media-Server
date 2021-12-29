@@ -1,0 +1,27 @@
+html {
+    height: 100%;
+}
+
+#pass_form {
+    height: max-content;
+    width: 350px;
+    background: #1A1A1A;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+#submit {
+    margin-top: 15px;
+}
+
+#header {
+    margin-bottom: 5px;
+    display: inline-block;
+}

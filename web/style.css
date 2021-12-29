@@ -1,6 +1,7 @@
 :root {
     --color-background: #0C0C0C;
     --color-background-2: #1A1A1A;
+    --color-background-3: #262626;
     --color-foreground: #DBDBDB;
     --color-highlight: #FF6060;
     --color-highlight2: #FF8080;
@@ -9,6 +10,10 @@
     font-weight: 300;
     letter-spacing: -0.06rem;
     font-size: 18px;
+}
+
+::selection {
+    background: var(--color-highlight2);
 }
 
 body {
@@ -39,7 +44,7 @@ body {
     color: var(--color-highlight);
 }
 
-button {
+button, input[type=submit]{
     border: none;
     background: var(--color-highlight);
     color: var(--color-background);
@@ -51,9 +56,8 @@ button {
     font-size: 18px;
 }
 
-button:hover {
-    background: var(--color-background-2);
-    color: var(--color-foreground);
+button:hover, input[type=submit]:hover {
+    background: var(--color-highlight2);
 }
 
 .switch {
@@ -87,4 +91,16 @@ input:checked + .switch {
 input:checked + .switch::before {
     left: 1.1rem;
     background: var(--color-background-2);
+}
+
+input[type=password], input[type=text] {
+    border-color: var(--color-highlight);
+    border-width: 1px;
+    background: var(--color-background3);
+    color: var(--color-foreground);
+    padding-left: 5px;
+}
+
+:focus {
+    outline: none;
 }

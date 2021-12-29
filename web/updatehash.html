@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <title>
+            authentication
+        </title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="auth.css">
+    </head>
+    <body>
+        <nav>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="/">home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/settings">settings</a>
+                </li>
+            </ul>
+        </nav>
+        <form action="/api/updatehash" method="post">
+            <div id="pass_form">
+                <span id="header">Update password</span> <br>
+                <label for="password">password: </label>
+                <input type="password" id="password" name="password">
+                <input type="submit" id="submit" value="Submit">
+            </div>  
+        </form>
+    </body>
+</html>
