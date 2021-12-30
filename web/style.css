@@ -47,7 +47,7 @@ body {
 button, input[type=submit]{
     border: none;
     background: var(--color-highlight);
-    color: var(--color-background);
+    color: var(--color-background-3);
     transition: all 200ms ease-in;
     padding: 0.1rem 2rem;
     font-family: monospace;
@@ -96,7 +96,7 @@ input:checked + .switch::before {
 input[type=password], input[type=text] {
     border-color: var(--color-highlight);
     border-width: 1px;
-    background: var(--color-background3);
+    background: var(--color-background-2);
     color: var(--color-foreground);
     padding-left: 5px;
     box-sizing: border-box;
