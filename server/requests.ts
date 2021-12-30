@@ -46,12 +46,8 @@ export function handleRequest(request: http.IncomingMessage, response: http.Serv
 			direct = 'settings.html';
 			break;
 		
-		case '/authenticate':
-			direct = 'auth.html';
-			break;
-
-		case '/updatehash':
-			direct = 'updatehash.html';
+		case '/login':
+			direct = 'login.html';
 			break;
 		
 		default:
