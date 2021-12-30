@@ -32,21 +32,23 @@
 				</tr>
 				<tr>
 					<td>
-						<p>
-							<label for="port">Port: </label> 
-							<input type="text" id="port"> <br>
-							<label for="libraries">Libraries:</label>
-							<input type="text" id="libraries"> 
-						</p>
-						<p>
-							<label for="lock">Password protection:</label>
-							<input type="checkbox" id="lock"> <br>
-							<label for="password">New Password:</label>
-							<input type="password" id="password"> <br>
-						</p>
-						<p>
-							<input type="submit" value="Update Settings">
-						</p>
+						<form action="/api/update" method="post">
+							<p>
+								<label for="port">Port: </label> 
+								<input name="port" type="text" id="port"> <br>
+								<label for="libraries">Libraries:</label>
+								<input name="libraries" type="text" id="libraries"> 
+							</p>
+							<p>
+								<label for="lock">Password protection:</label>
+								<input name="lock" type="checkbox" id="lock"> <br>
+								<label for="password">New Password:</label>
+								<input name="password" type="password" id="password"> <br>
+							</p>
+							<p>
+								<input type="submit" value="Update Settings">
+							</p>
+						</form>
 					</td>
 				</tr>
 			</tbody>
