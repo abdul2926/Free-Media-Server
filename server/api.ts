@@ -29,7 +29,7 @@ export function handleAPIRequest(request: http.IncomingMessage, response: http.S
 					updateHash(false, request, response, password);
 				}
 				break;
-			case '/api/authenticate':
+			case '/api/login':
 				authenticate(password, request, response);
 				break;
 		}
