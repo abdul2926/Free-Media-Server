@@ -3,6 +3,8 @@ const crypto = require('crypto');
 const errorHandler = require('./error');
 var config = require('./config');
 
+// TODO: Fix redirects system and error handling (it's an inconsistent mess right now)
+
 module.exports.handleAPIRequest = handleAPIRequest;
 
 function handleAPIRequest (request, response) {
