@@ -16,24 +16,7 @@ function handleAPIRequest (request, response) {
 		buffer += chunk;
 	});
 	request.on('end', () => {
-		/* TODO: Check integrity of all form submissions */
-		/* Fix parsing */
-		let formData = buffer.toString().split('&');
-		if (formData.length > 4) {
-			let _formData = formData;
-			for (let i = 0; i < 4; i++)
-				_formData.shift();
-			formData[3] = _formData.join('&');
-		}
-		let password = formData.toString().split('=');
-		password = password[password.indexOf('password') + 1];
-		console.log(password);
-		/* End of parsing section */
-
-		if (!password || password == -1) {
-			errorHandler.serveError(400, response);
-			return;
-		}
+		[port, libraries, lock, password] = parseFormData(buffer);
 		switch (path) {
 			case '/api/update':
 				if (config.json.lock.hash)
@@ -48,11 +31,34 @@ function handleAPIRequest (request, response) {
 	});
 }
 
+function parseFormData(buffer) {
+	let sections = buffer.split('&');
+	let port, libraries, lock, password;
+	for (let i = 0; i < sections.length; i++) {
+		sections[i] = sections[i].split('=');
+		switch (sections[i][0]) {
+			case 'port':
+				port = sections[i][1];
+				break;
+			case 'libraries':
+				libraries = sections[i][1];
+				break;
+			case 'lock':
+				lock = sections[i][1];
+				break;
+			case 'password':
+				password = sections[i][1];
+				break;
+		}
+	}
+	return [port, libraries, lock, password];
+}
+
 function login(password, response) {
-	console.log(`Password before hash(login): ${password}`);
+	if (!password) {
+		errorHandler.serveError(400, response);
+	}
 	const hash = crypto.createHash('sha256', config.json.secret).update(password, 'utf-8').digest('hex');
-	console.log(`hash: ${hash}`);
-	console.log(`saved hash: ${config.json.lock.hash}`);
 	if (hash == config.json.lock.hash) {
 		const cookie = crypto.createHash('sha256', config.json.secret).update(password + crypto.randomBytes(256).toString('hex')).digest('hex');
 		config.json.auth.push(cookie);
@@ -86,24 +92,30 @@ function parseCookies(request) {
 }
 
 function loggedIn(response, request) {
-	if (config.json.auth.includes(parseCookies(request).auth)) {
+	if (!config.json.auth.includes(parseCookies(request).auth)) {
 		response.writeHead(302, {
 			'Location' : '/login',
 			'Content-Type' : 'text/html'
 		});
 		response.end();
+		return false;
 	}
+	return true;
 }
 
 function updatePassword (restricted, request, response, password) {
-	if (restricted)
-		if (!loggedIn(response, request))
+	if (restricted) {
+		if (!loggedIn(response, request)) {
+			errorHandler.serveError(401, response);
 			return;
+		}
+	}
+			
 	if (!password) {
 		errorHandler.serveError(400, response);
 		return;
 	}
-	console.log(`Password before hash(update): ${password}`);
+
 	const hash = crypto.createHash('sha256', config.json.secret).update(password, 'utf-8').digest('hex');
 	config.json.lock.hash = hash;
 	config.update(config.json);
