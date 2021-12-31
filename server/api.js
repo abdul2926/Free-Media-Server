@@ -6,11 +6,34 @@ var config = require('./config');
 module.exports.handleAPIRequest = handleAPIRequest;
 
 function handleAPIRequest (request, response) {
-	let path = url.parse(request.url, true).pathname;
-	if (!path.startsWith('/api')) {
-		errorHandler.serveError(400, response);
-		return;
+	switch (request.method) {
+		case 'GET':
+			handleGET(request, response);
+			break;
+		case 'POST':
+			handlePOST(request, response);
+			break;
+		default:
+			errorHandler.serveError(405, response);
+			break;
 	}
+}
+
+function handleGET(request, response) {
+	let path = url.parse(request.url, true).pathname;
+	switch (path) {
+		case '/api/getconfig':
+			serveConfig(response);
+			break;
+		default:
+			errorHandler.serveError(404, response);
+			break;
+	}
+}
+
+function handlePOST(request, response) {
+	let path = url.parse(request.url, true).pathname;
+
 	let buffer = '';
 	request.on('data', chunk => {
 		buffer += chunk;
@@ -26,6 +49,9 @@ function handleAPIRequest (request, response) {
 				break;
 			case '/api/login':
 				login(password, response);
+				break;
+			default:
+				errorHandler.serveError(404, response);
 				break;
 		}
 	});
@@ -123,5 +149,18 @@ function updatePassword (restricted, request, response, password) {
 		'Location' : '/login',
 		'Content-Type' : 'text/html'
 	});
+	response.end();
+}
+
+function serveConfig(response) {
+	let publicConf = {
+		"port" : config.json.port,
+		"libraries" : config.json.libs,
+		"lock" : config.json.lock.enabled
+	}
+	response.writeHead(200, {
+		'Content-Type' : 'application/json'
+	});
+	response.write(JSON.stringify(publicConf));
 	response.end();
 }

@@ -1,13 +1,18 @@
 const url = require('url');
 const fs = require('fs');
 const errorHandler = require('./error');
+const api = require('./api');
 
 module.exports.handleRequest = handleRequest;
 
 function handleRequest(request, response) {
 	let path = url.parse(request.url, true).pathname;
-	let filetype = path.split('.').slice(-1);
+	if (path.startsWith('/api')) {
+		api.handleAPIRequest(request, response);
+		return;
+	}
 
+	let filetype = path.split('.').slice(-1);
 	if (filetype && filetype == 'css' || filetype == 'js') {
 		serveNonHTML(filetype, path, response);
 		return;
