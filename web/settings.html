@@ -6,8 +6,9 @@
 			settings | Free Media Server
 		</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
+		<script src="settings.js"></script>
 	</head>
-	<body>
+	<body onload="loadConfig()">
 		<table id="content">
 			<tbody>
 				<tr>
@@ -32,7 +33,7 @@
 				</tr>
 				<tr>
 					<td>
-						<form action="/api/update" method="post">
+						<form action="/api/update" method="post" >
 							<p>
 								<label for="port">Port: </label> 
 								<input name="port" type="text" id="port"> <br>

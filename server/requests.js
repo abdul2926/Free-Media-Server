@@ -6,7 +6,8 @@ const api = require('./api');
 module.exports.handleRequest = handleRequest;
 
 function handleRequest(request, response) {
-	let path = url.parse(request.url, true).pathname;
+	let path = url.parse(request.url, true).pathname.replace('/localhost', '').replace('/127.0.0.1', '');
+
 	if (path.startsWith('/api')) {
 		api.handleAPIRequest(request, response);
 		return;

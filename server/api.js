@@ -20,7 +20,8 @@ function handleAPIRequest (request, response) {
 }
 
 function handleGET(request, response) {
-	let path = url.parse(request.url, true).pathname;
+	let path = url.parse(request.url, true).pathname.replace('/localhost', '').replace('/127.0.0.1', '');
+	path = path.replace('/localhost', '');
 	switch (path) {
 		case '/api/getconfig':
 			serveConfig(response);
@@ -32,8 +33,7 @@ function handleGET(request, response) {
 }
 
 function handlePOST(request, response) {
-	let path = url.parse(request.url, true).pathname;
-
+	let path = url.parse(request.url, true).pathname.replace('/localhost', '').replace('/127.0.0.1', '');
 	let buffer = '';
 	request.on('data', chunk => {
 		buffer += chunk;
