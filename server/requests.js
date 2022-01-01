@@ -63,14 +63,11 @@ function serveHTML(path, request, response) {
 	}
 
 	if (config.json.lock.enabled) {
-		if (!api.loggedIn(request)) {
-			if (!directs.get(path) == 'login.html') {
-				response.writeHead(302, {
-					'Content-Type' : 'text/html',
-					'Location' : '/login'
-				});
-				response.end();
-				return;
+		if (config.json.lock.hash) {
+			if (!api.loggedIn(request)) {
+				if (directs.get(path) != 'login.html') {
+					path = '/login';
+				}
 			}
 		}
 	}

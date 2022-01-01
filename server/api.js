@@ -189,7 +189,7 @@ function updateLock (lock) {
 	else
 		lock = false;
 
-	config.json.lock.enable = lock;
+	config.json.lock.enabled = lock;
 	config.update(config.json);
 }
 
