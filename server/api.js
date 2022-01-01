@@ -3,8 +3,6 @@ const crypto = require('crypto');
 const errors = require('./error');
 var config = require('./config');
 
-// TODO: Fix redirects system and error handling (it's an inconsistent mess right now)
-
 module.exports.handleAPIRequest = handleAPIRequest;
 module.exports.loggedIn = loggedIn;
 
@@ -51,10 +49,27 @@ function handlePOST(request, response) {
 		[port, libraries, lock, password] = parseFormData(buffer);
 		switch (path) {
 			case '/api/update':
-				if (config.json.lock.hash)
-				updatePassword(true, request, response, password);
-				else
-				updatePassword(false, request, response, password);
+				if (config.json.lock.hash) {
+					if (!loggedIn(request)) {
+						response.writeHead(302, {
+							'Content-Type' : 'text/html',
+							'location' : '/login'
+						});
+						response.end()
+						return;
+					}
+				} 
+
+				updatePort(port);
+				updateLibraries(libraries);
+				updateLock(lock);
+				updatePassword(password);
+
+				response.writeHead(200, {
+					'Content-Type' : 'text/html',
+					'Location' : '/'
+				});
+				response.end();
 				break;
 			case '/api/login':
 				login(password, response);
@@ -138,33 +153,38 @@ function loggedIn(request) {
 	return true;
 }
 
-function updatePassword (restricted, request, response, password) {
-	if (restricted) {
-		if (!loggedIn(request)) {
-			response.writeHead(302, {
-				'Location' : '/login',
-			});
-			response.end();
-			return;
-		}
-	}
-			
+function updatePassword (password) {
 	if (!password) {
-		response.writeHead(400, {
-			'Content-Type' : 'text/plain'
-		});
-		response.end(errors.get(400));
 		return;
 	}
-
 	const hash = crypto.createHash('sha256', config.json.secret).update(password, 'utf-8').digest('hex');
 	config.json.lock.hash = hash;
 	config.update(config.json);
-	response.writeHead(302, {
-		'Location' : '/login',
-		'Content-Type' : 'text/html'
-	});
-	response.end();
+}
+
+function updatePort(port) {
+	if (!port) {
+		return;
+	}
+	config.json.port = port;
+	config.update(config.json);
+}
+
+function updateLibraries(libs) {
+	if (!updateLibraries) {
+		return;
+	}
+	const libraries = libs.split(';');
+	config.json.libs = libraries;
+	config.update(config.json);
+}
+
+function updateLock (lock) {
+	if (lock == null) {
+		return;
+	}
+	config.json.lock.enable = lock;
+	config.update(config.json);
 }
 
 function serveConfig(response) {
