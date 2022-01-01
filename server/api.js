@@ -120,7 +120,7 @@ function login(password, response) {
 		config.json.auth.push(cookie);
 		config.update(config.json);
 		response.writeHead(302, {
-			'Set-Cookie': `auth=${cookie}`,
+			'Set-Cookie': `auth=${cookie}; path=/`,
 			'Content-Type' : 'text/html',
 			'Location' : '/'
 		});

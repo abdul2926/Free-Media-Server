@@ -20,7 +20,7 @@ function handleRequest(request, response) {
 		return;
 	}
 
-	serveHTML(path, response);
+	serveHTML(path, request, response);
 }
 
 function serveNonHTML(type, path, response) {
@@ -48,7 +48,7 @@ let directs = new Map([
 	['/login', 'login.html']
 ]);
 
-function serveHTML(path, response) {
+function serveHTML(path, request, response) {
 	if (config.json.lock.hash) {
 		if (directs.get(path) == 'settings.html') {
 			if (!api.loggedIn(request)) {
