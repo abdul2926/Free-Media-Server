@@ -1,7 +1,8 @@
 const url = require('url');
 const fs = require('fs');
-const errorHandler = require('./error');
+const errors = require('./error');
 const api = require('./api');
+const { config } = require('process');
 
 module.exports.handleRequest = handleRequest;
 
@@ -25,7 +26,10 @@ function handleRequest(request, response) {
 function serveNonHTML(type, path, response) {
 	fs.readFile(`./web${path}`, function (error, data) {
 		if (error) {
-			errorHandler.serveError(404, response);
+			response.writeHead(404, {
+				'Content-Type' : 'text/plain'
+			});
+			response.end(errors.get(404));
 		} else {
 			response.writeHead(200, {
 				'Content-Type' : type == 'css' ? 'text/css' : 'text/javascript',
@@ -45,10 +49,38 @@ let directs = new Map([
 ]);
 
 function serveHTML(path, response) {
-	// TODO: Implement check for password protection
+	if (config.json.lock.hash) {
+		if (directs.get(path) == 'settings.html') {
+			if (!api.loggedIn(request)) {
+				response.writeHead(302, {
+					'Content-Type' : 'text/html',
+					'Location' : '/login'
+				});
+				response.end();
+				return;
+			}
+		}
+	}
+
+	if (config.json.lock.enabled) {
+		if (!api.loggedIn(request)) {
+			if (!directs.get(path) == 'login.html') {
+				response.writeHead(302, {
+					'Content-Type' : 'text/html',
+					'Location' : '/login'
+				});
+				response.end();
+				return;
+			}
+		}
+	}
+
 	fs.readFile(`./web/${directs.get(path)}`, function (error, data) {
 		if (error) {
-			errorHandler.serveError(404, response);
+			response.writeHead(404, {
+				'Content-Type' : 'text/plain'
+			});
+			response.end(errors.get(404));
 			return;
 		}
 

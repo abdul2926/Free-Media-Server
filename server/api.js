@@ -1,11 +1,12 @@
 const url = require('url');
 const crypto = require('crypto');
-const errorHandler = require('./error');
+const errors = require('./error');
 var config = require('./config');
 
 // TODO: Fix redirects system and error handling (it's an inconsistent mess right now)
 
 module.exports.handleAPIRequest = handleAPIRequest;
+module.exports.loggedIn = loggedIn;
 
 function handleAPIRequest (request, response) {
 	switch (request.method) {
@@ -16,7 +17,10 @@ function handleAPIRequest (request, response) {
 			handlePOST(request, response);
 			break;
 		default:
-			errorHandler.serveError(405, response);
+			response.writeHead(405, {
+				'Content-Type' : 'text/plain'
+			});
+			response.end(errors.get(405));
 			break;
 	}
 }
@@ -29,7 +33,10 @@ function handleGET(request, response) {
 			serveConfig(response);
 			break;
 		default:
-			errorHandler.serveError(404, response);
+			response.writeHead(404, {
+				'Content-Type' : 'text/plain'
+			});
+			response.end(errors.get(404));
 			break;
 	}
 }
@@ -53,7 +60,7 @@ function handlePOST(request, response) {
 				login(password, response);
 				break;
 			default:
-				errorHandler.serveError(404, response);
+				errors.get(404, response);
 				break;
 		}
 	});
@@ -84,7 +91,7 @@ function parseFormData(buffer) {
 
 function login(password, response) {
 	if (!password) {
-		errorHandler.serveError(400, response);
+		errors.get(400, response);
 	}
 	const hash = crypto.createHash('sha256', config.json.secret).update(password, 'utf-8').digest('hex');
 	if (hash == config.json.lock.hash) {
@@ -98,7 +105,7 @@ function login(password, response) {
 		});
 		response.end();
 	} else {
-		errorHandler.serveError(401, response);
+		errors.get(401, response);
 		response.writeHead(302, {
 			'Location' : '/',
 			'Content-Type' : 'text/html'
@@ -119,13 +126,8 @@ function parseCookies(request) {
 	return cookies;
 }
 
-function loggedIn(response, request) {
+function loggedIn(request) {
 	if (!config.json.auth.includes(parseCookies(request).auth)) {
-		response.writeHead(302, {
-			'Location' : '/login',
-			'Content-Type' : 'text/html'
-		});
-		response.end();
 		return false;
 	}
 	return true;
@@ -133,14 +135,17 @@ function loggedIn(response, request) {
 
 function updatePassword (restricted, request, response, password) {
 	if (restricted) {
-		if (!loggedIn(response, request)) {
-			errorHandler.serveError(401, response);
+		if (!loggedIn(request)) {
+			response.writeHead(302, {
+				'Location' : '/login',
+			});
+			response.end();
 			return;
 		}
 	}
 			
 	if (!password) {
-		errorHandler.serveError(400, response);
+		errors.get(400, response);
 		return;
 	}
 

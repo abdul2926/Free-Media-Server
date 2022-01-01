@@ -1,10 +1,14 @@
 const http = require('http');
 const config = require('./config');
-const errorHandler = require('./error');
 const requests = require('./requests');
 
 let server = http.createServer(function (request, response) {
+	console.log(Date.now().UTC());
 	requests.handleRequest(request, response);
+});
+
+process.on('uncaughtException', error => {
+	console.error(`Uncaught exception: ${error.toString()}\nCallstack: ${error.stack}`);
 });
 
 server.listen(config.json.port);

@@ -1,4 +1,4 @@
-module.exports.serveError = serveError;
+module.exports.get = get;
 
 let errors = new Map([
 	[400, 'Bad Request'],
@@ -35,10 +35,6 @@ let errors = new Map([
 	[511, 'Network Authentication Required']
 ]);
 
-function serveError (code, response) {
-	response.writeHead(code, {
-		'Content-Type' : 'text/plain'
-	});
-	response.write(`${code}:${errors.get(code)}`);
-	response.end();
+function get(code) {
+	return errors.get(code);
 }
