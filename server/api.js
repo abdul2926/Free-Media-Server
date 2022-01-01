@@ -127,7 +127,7 @@ function login(password, response) {
 		response.end();
 	} else {
 		response.writeHead(302, {
-			'Location' : '/',
+			'Location' : 'back',
 			'Content-Type' : 'text/html'
 		});
 		response.end();
@@ -159,6 +159,7 @@ function updatePassword (password) {
 	}
 	const hash = crypto.createHash('sha256', config.json.secret).update(password, 'utf-8').digest('hex');
 	config.json.lock.hash = hash;
+	config.json.auth = [];
 	config.update(config.json);
 }
 
