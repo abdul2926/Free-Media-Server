@@ -3,7 +3,6 @@ const config = require('./config');
 const requests = require('./requests');
 
 let server = http.createServer(function (request, response) {
-	console.log(Date.now().UTC());
 	requests.handleRequest(request, response);
 });
 

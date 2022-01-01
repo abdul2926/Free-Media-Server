@@ -2,7 +2,7 @@ const url = require('url');
 const fs = require('fs');
 const errors = require('./error');
 const api = require('./api');
-const { config } = require('process');
+var config = require('./config');
 
 module.exports.handleRequest = handleRequest;
 

@@ -60,7 +60,10 @@ function handlePOST(request, response) {
 				login(password, response);
 				break;
 			default:
-				errors.get(404, response);
+				response.writeHead(404, {
+					'Content-Type' : 'text/plain'
+				});
+				response.end(errors.get(404));
 				break;
 		}
 	});
@@ -91,7 +94,10 @@ function parseFormData(buffer) {
 
 function login(password, response) {
 	if (!password) {
-		errors.get(400, response);
+		response.writeHead(400, {
+			'Content-Type' : 'text/plain'
+		});
+		response.end(errors.get(400));
 	}
 	const hash = crypto.createHash('sha256', config.json.secret).update(password, 'utf-8').digest('hex');
 	if (hash == config.json.lock.hash) {
@@ -105,7 +111,6 @@ function login(password, response) {
 		});
 		response.end();
 	} else {
-		errors.get(401, response);
 		response.writeHead(302, {
 			'Location' : '/',
 			'Content-Type' : 'text/html'
@@ -145,7 +150,10 @@ function updatePassword (restricted, request, response, password) {
 	}
 			
 	if (!password) {
-		errors.get(400, response);
+		response.writeHead(400, {
+			'Content-Type' : 'text/plain'
+		});
+		response.end(errors.get(400));
 		return;
 	}
 
