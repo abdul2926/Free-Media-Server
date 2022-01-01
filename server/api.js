@@ -55,7 +55,7 @@ function handlePOST(request, response) {
 							'Content-Type' : 'text/html',
 							'location' : '/login'
 						});
-						response.end()
+						response.end();
 						return;
 					}
 				} 
@@ -65,7 +65,7 @@ function handlePOST(request, response) {
 				updateLock(lock);
 				updatePassword(password);
 
-				response.writeHead(200, {
+				response.writeHead(302, {
 					'Content-Type' : 'text/html',
 					'Location' : '/'
 				});
@@ -174,7 +174,7 @@ function updateLibraries(libs) {
 	if (!updateLibraries) {
 		return;
 	}
-	const libraries = libs.split(';');
+	const libraries = decodeURIComponent(libs).split(';');
 	config.json.libs = libraries;
 	config.update(config.json);
 }
@@ -183,6 +183,12 @@ function updateLock (lock) {
 	if (lock == null) {
 		return;
 	}
+
+	if (lock == 'on')
+		lock = true;
+	else
+		lock = false;
+
 	config.json.lock.enable = lock;
 	config.update(config.json);
 }
