@@ -1,7 +1,7 @@
 const fs = require('fs');
 const config = require('./config');
 
-// TODO: put library array in json object
+// TODO: add function to return library without indexing
 
 module.exports = library;
 
@@ -11,8 +11,11 @@ async function indexLibrary() {
     const libs = config.json.libs;
     const files = await gatherFiles(libs);
     const series = parseData(files);
-    saveSeries(series);
-    return series;
+    const seriesJSON = {
+        series = series
+    }
+    saveSeries(JSON.parse(seriesJSON));
+    return JSON.parese(seriesJSON);
 }
 
 async function gatherFiles(paths) {

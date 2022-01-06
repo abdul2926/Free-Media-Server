@@ -2,6 +2,7 @@ const url = require('url');
 const crypto = require('crypto');
 const errors = require('./error');
 var config = require('./config');
+const files = require('./files');
 
 module.exports.handleAPIRequest = handleAPIRequest;
 module.exports.loggedIn = loggedIn;
@@ -29,6 +30,9 @@ function handleGET(request, response) {
 	switch (path) {
 		case '/api/getconfig':
 			serveConfig(response);
+			break;
+		case '/api/getlib':
+			serveLibrary(response);
 			break;
 		default:
 			response.writeHead(404, {
@@ -204,5 +208,22 @@ function serveConfig(response) {
 		'Content-Type' : 'application/json'
 	});
 	response.write(JSON.stringify(publicConf));
+	response.end();
+}
+
+function serveLibrary(response) {
+	if (!loggedIn()) {
+		response.writeHead(401, {
+			'Content-Type' : 'text/plain'
+		});
+		response.write(errors.get(401));
+		response.end();
+		return;
+	}
+
+	response.writeHead(200, {
+		'Content-Type' : 'application/json'
+	});
+	response.write(Json.stringify(files.library));
 	response.end();
 }

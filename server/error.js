@@ -1,6 +1,6 @@
 module.exports.get = get;
 
-let errors = new Map([
+const errors = new Map([
 	[400, 'Bad Request'],
 	[401, 'Unauthorized'],
 	[403, 'Forbidden'],
