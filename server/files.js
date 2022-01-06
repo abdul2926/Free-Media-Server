@@ -1,6 +1,8 @@
 const fs = require('fs');
 const config = require('./config');
 
+// TODO: put library array in json object
+
 module.exports = library;
 
 const library = indexLibrary();
