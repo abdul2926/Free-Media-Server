@@ -10,7 +10,7 @@ function setContent() {
 	let cache = localStorage['library'];
 	let library = JSON.parse(cache);
 
-    let content = document.getElementById('content');
+    let content = document.getElementById('main-content');
     let innerHTML = content.innerHTML;
     library.series.forEach(series => {
         const seriesEntry = `<div class="seriesEntry">
@@ -22,7 +22,7 @@ function setContent() {
     content.innerHTML = innerHTML;
 }
 
-function cacheLibrary(data) {
+function cacheLibrary() {
 	let xmlhttp = new XMLHttpRequest();
     let url = `${window.location.hostname}/api/getlib`;
 

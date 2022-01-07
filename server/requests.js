@@ -2,6 +2,7 @@ const url = require('url');
 const fs = require('fs');
 const errors = require('./error');
 const api = require('./api');
+const img = require('./img');
 var config = require('./config');
 
 module.exports.handleRequest = handleRequest;
@@ -11,6 +12,11 @@ function handleRequest(request, response) {
 
 	if (path.startsWith('/api')) {
 		api.handleAPIRequest(request, response);
+		return;
+	}
+
+	if (path.startsWith('/img')) {
+		img.handleIMGRequest(request, response);
 		return;
 	}
 

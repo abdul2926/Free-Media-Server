@@ -18,7 +18,8 @@ body {
 	font-family: monospace;
 	text-align: left;
 	margin: 0;
-	padding: 0;
+	padding-left: 20px;
+	padding-right: 20px;
 }
 
 #content {
@@ -80,4 +81,29 @@ body {
 
 #password {
 	margin: 0.5rem 0 0.5rem 0;
+}
+
+#main-content {
+	width: 50rem;
+	left: calc(50% - 25rem);
+	position: relative;
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+}
+
+.seriesEntry {
+	display: inline;
+	height: 300px;
+	width: 150px;
+	overflow: hidden;
+}
+
+.seriesEntry img {
+	height: 250px;
+	width: 140px;
+	margin-left: 5px;
+}
+
+.seriesEntry span {
+	margin-left: 5px;
 }

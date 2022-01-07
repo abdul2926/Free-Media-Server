@@ -46,7 +46,7 @@ function parseData(files) {
     let series = [];
 	
     let seriesBuffer = resetBuffer();
-    files.forEach(file => {
+    files.forEach(function (file, i) {
         const splitPath = file.split('/');
         const seriesName = splitPath[splitPath.length - 2];
         if (seriesBuffer.name == null || seriesBuffer.name == '') {
@@ -62,6 +62,9 @@ function parseData(files) {
                 seriesBuffer.files.push(file);
             }
         }
+		if (i == files.length - 1) {
+			series.push(seriesBuffer);
+		}
     });
     return series;
 }
@@ -69,7 +72,7 @@ function parseData(files) {
 function resetBuffer() {
     return {
         name: '',
-        image: 'https://pm1.narvii.com/6954/4e6e018d8694eded5c089cc2713a85fe99382fa0r1-549-1000v2_hq.jpg',
+        image: '/img/placeholder.jpg',
         files: [
 
         ]
