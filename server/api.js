@@ -151,6 +151,10 @@ function parseCookies(request) {
 }
 
 function loggedIn(request) {
+	if (!config.json.lock.hash) {
+		return true;
+	}
+
 	if (!config.json.auth.includes(parseCookies(request).auth)) {
 		return false;
 	}
@@ -211,7 +215,7 @@ function serveConfig(response) {
 	response.end();
 }
 
-function serveLibrary(response) {
+async function serveLibrary(response) {
 	if (!loggedIn()) {
 		response.writeHead(401, {
 			'Content-Type' : 'text/plain'
@@ -224,6 +228,7 @@ function serveLibrary(response) {
 	response.writeHead(200, {
 		'Content-Type' : 'application/json'
 	});
-	response.write(Json.stringify(files.library));
+	const library = await files.getLibrary()
+	response.write(JSON.stringify(library));
 	response.end();
 }

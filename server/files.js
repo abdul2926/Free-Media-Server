@@ -3,8 +3,7 @@ const config = require('./config');
 
 // TODO: add function to return library without indexing
 
-const library = indexLibrary();
-module.exports = library;
+module.exports.getLibrary = indexLibrary;
 
 async function indexLibrary() {
     const libs = config.json.libs;
@@ -51,7 +50,6 @@ function parseData(files) {
         const splitPath = file.split('/');
         const seriesName = splitPath[splitPath.length - 2];
         if (seriesBuffer.name == null || seriesBuffer.name == '') {
-			console.log('First item');
             seriesBuffer.name = seriesName;
             seriesBuffer.files.push(file);
         } else {
@@ -71,7 +69,7 @@ function parseData(files) {
 function resetBuffer() {
     return {
         name: '',
-        image: '',
+        image: 'https://pm1.narvii.com/6954/4e6e018d8694eded5c089cc2713a85fe99382fa0r1-549-1000v2_hq.jpg',
         files: [
 
         ]
