@@ -3,23 +3,26 @@ const config = require('./config');
 
 // TODO: add function to return library without indexing
 
-module.exports = library;
-
 const library = indexLibrary();
+module.exports = library;
 
 async function indexLibrary() {
     const libs = config.json.libs;
     const files = await gatherFiles(libs);
     const series = parseData(files);
-    const seriesJSON = {
-        series = series
+	if (series == []) {
+		return;
+	}
+
+    const seriesObj = {
+        series: series
     }
-    saveSeries(JSON.parse(seriesJSON));
-    return JSON.parese(seriesJSON);
+    saveSeries(JSON.parse(JSON.stringify(seriesObj)));
+    return JSON.parse(JSON.stringify(seriesObj));
 }
 
 async function gatherFiles(paths) {
-    let files = [];
+    let filesArr = [];
     for (const path of paths) {
         try {
             const files = await fs.promises.readdir(path);
@@ -27,30 +30,32 @@ async function gatherFiles(paths) {
                 const filePath = `${path}/${file}`;
                 const stat = await fs.promises.stat(filePath);
                 if (stat.isFile()) {
-                    files.push(filePath);
+                    filesArr.push(filePath);
                 } else {
-                    const dir = [filePath];
-                    files.concat(await gatherFiles(dir));
+                    let dir = [filePath];
+                    filesArr = filesArr.concat(await gatherFiles(dir));
                 }
             }
         } catch (error) {
             console.log(error);
         }
     }
-    return files;
+    return filesArr;
 }
 
 function parseData(files) {
     let series = [];
+	
     let seriesBuffer = resetBuffer();
     files.forEach(file => {
         const splitPath = file.split('/');
         const seriesName = splitPath[splitPath.length - 2];
         if (seriesBuffer.name == null || seriesBuffer.name == '') {
+			console.log('First item');
             seriesBuffer.name = seriesName;
             seriesBuffer.files.push(file);
         } else {
-            if (seriesBuffer.name == seriesBuffer) {
+            if (seriesBuffer.name == seriesName) {
                 seriesBuffer.files.push(file);
             } else {
                 series.push(seriesBuffer);
