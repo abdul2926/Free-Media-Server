@@ -25,13 +25,21 @@ function handleAPIRequest (request, response) {
 }
 
 function handleGET(request, response) {
-	let path = url.parse(request.url, true).pathname.replace('/localhost', '').replace('/127.0.0.1', '');
+	let path = getPath(request)
+
+	if (path.startsWith('/api/series/')) {
+		path = '/api/series';
+	}
+
 	switch (path) {
 		case '/api/getconfig':
 			serveConfig(response);
 			break;
 		case '/api/getlib':
 			serveLibrary(response);
+			break;
+		case '/api/series':
+			serveSeries(request, response);
 			break;
 		default:
 			response.writeHead(404, {
@@ -43,7 +51,7 @@ function handleGET(request, response) {
 }
 
 function handlePOST(request, response) {
-	let path = url.parse(request.url, true).pathname.replace('/localhost', '').replace('/127.0.0.1', '');
+	let path = getPath(request)
 	let buffer = '';
 	request.on('data', chunk => {
 		buffer += chunk;
@@ -87,6 +95,12 @@ function handlePOST(request, response) {
 	});
 }
 
+function getPath (request) {
+	return url.parse(request.url, true).pathname
+		.replace('/localhost', '')
+		.replace('/127.0.0.1', '');
+}
+
 function parseFormData(buffer) {
 	let sections = buffer.split('&');
 	let port, libraries, lock, password;
@@ -125,7 +139,7 @@ function login(password, response) {
 		response.writeHead(302, {
 			'Set-Cookie': `auth=${cookie}; path=/`,
 			'Content-Type' : 'text/html',
-			'Location' : '/'
+			'Location' : 'back'
 		});
 		response.end();
 	} else {
@@ -227,7 +241,37 @@ async function serveLibrary(response) {
 	response.writeHead(200, {
 		'Content-Type' : 'application/json'
 	});
-	const library = await files.getLibrary()
+	const library = await files.getLibrary();
 	response.write(JSON.stringify(library));
+	response.end();
+}
+
+async function serveSeries(request, response) {
+	if (!loggedIn()) {
+		response.writeHead(401, {
+			'Content-Type' : 'text/plain'
+		});
+		response.write(errors.get(401));
+		response.end();
+		return;
+	}
+	let path = getPath(request);
+	let pathSplit = path.split('/');
+	let id = pathSplit[pathSplit.length - 1];
+
+	const library = await files.getLibrary();
+	const series = library.series[id];
+	if (!series) {
+		response.writeHead(404, {
+			'Content-Type' : 'text/plain'
+		});
+		response.end(errors.get(404));
+		return;
+	}
+
+	response.writeHead(200, {
+		'Content-Type' : 'application/json'
+	});
+	response.write(JSON.stringify(series));
 	response.end();
 }
