@@ -21,9 +21,13 @@ function handleRequest(request, response) {
 	}
 
 	let filetype = path.split('.').slice(-1);
-	if (filetype && filetype == 'css' || filetype == 'js') {
+	if (filetype && filetype == 'css' | filetype == 'js') {
 		serveNonHTML(filetype, path, response);
 		return;
+	}
+
+	if (path.startsWith('/series')) {
+		path = '/series';
 	}
 
 	serveHTML(path, request, response);
@@ -51,7 +55,8 @@ let directs = new Map([
 	['/index', 'index.html'],
 	['/settings', 'settings.html'],
 	['/config', 'settings.html'],
-	['/login', 'login.html']
+	['/login', 'login.html'],
+	['/series', 'series.html']
 ]);
 
 function serveHTML(path, request, response) {

@@ -12,11 +12,14 @@ function setContent() {
 
     let content = document.getElementById('main-content');
     let innerHTML = content.innerHTML;
-    library.series.forEach(series => {
-        const seriesEntry = `<div class="seriesEntry">
+    library.series.forEach((series, i) => {
+        const seriesEntry = `
+		<a href="/series/${i}">
+		<div class="seriesEntry">
         <img src="${series.image}" alt="image unavailable">
         <span>${series.name}</span>
-        </div>`;
+        </div>
+		</a>`;
         innerHTML += seriesEntry;
     });
     content.innerHTML = innerHTML;

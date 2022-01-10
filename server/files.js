@@ -39,6 +39,11 @@ async function gatherFiles(paths) {
 						let fileType = fileSplit[fileSplit.length - 1];
 						if (supportedFormats.includes(fileType)) {
 							filesArr.push(filePath);
+						} else if (fileType == 'jpg' | 'jpeg' | 'png' | 'gif') {
+							fs.copyFile(filePath, `./img/${file}`, err => {
+								console.log(`Failed to copy file: ${err}`);
+							});
+							filesArr.push(`./img/${file}`);
 						}
 					}
                 } else {
@@ -60,17 +65,25 @@ function parseData(files) {
     files.forEach(function (file, i) {
         const splitPath = file.split('/');
         const seriesName = splitPath[splitPath.length - 2];
-        if (seriesBuffer.name == null || seriesBuffer.name == '') {
+		
+		const fileSplit = file.split('.');
+		const fileType = fileSplit[fileSplit.length - 1];
+		if (fileType == 'jpg' | 'jpeg' | 'png' | 'gif') {
+			seriesBuffer.image = file;
+			return;
+		} 
+
+        if (seriesBuffer.name == null | seriesBuffer.name == '') {
             seriesBuffer.name = seriesName;
-            seriesBuffer.files.push(file);
+			seriesBuffer.files.push(file);
         } else {
             if (seriesBuffer.name == seriesName) {
-                seriesBuffer.files.push(file);
+				seriesBuffer.files.push(file);
             } else {
                 series.push(seriesBuffer);
                 seriesBuffer = resetBuffer();
                 seriesBuffer.name = seriesName;
-                seriesBuffer.files.push(file);
+				seriesBuffer.files.push(file);
             }
         }
 		if (i == files.length - 1) {
