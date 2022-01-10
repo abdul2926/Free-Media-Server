@@ -5,6 +5,11 @@ const config = require('./config');
 
 module.exports.getLibrary = indexLibrary;
 
+const supportedFormats = [
+	'mp4',
+	'mpeg'
+];
+
 async function indexLibrary() {
     const libs = config.json.libs;
     const files = await gatherFiles(libs);
@@ -29,7 +34,11 @@ async function gatherFiles(paths) {
                 const filePath = `${path}/${file}`;
                 const stat = await fs.promises.stat(filePath);
                 if (stat.isFile()) {
-                    filesArr.push(filePath);
+					let fileSplit = file.split('.');
+					let fileType = fileSplit[length - 1];
+					if (supportedFormats.includes(fileType)) {
+						filesArr.push(filePath);
+					}
                 } else {
                     let dir = [filePath];
                     filesArr = filesArr.concat(await gatherFiles(dir));
