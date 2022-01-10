@@ -35,9 +35,11 @@ async function gatherFiles(paths) {
                 const stat = await fs.promises.stat(filePath);
                 if (stat.isFile()) {
 					let fileSplit = file.split('.');
-					let fileType = fileSplit[length - 1];
-					if (supportedFormats.includes(fileType)) {
-						filesArr.push(filePath);
+					if (typeof fileSplit === Array) {
+						let fileType = fileSplit[length - 1];
+						if (supportedFormats.includes(fileType)) {
+							filesArr.push(filePath);
+						}
 					}
                 } else {
                     let dir = [filePath];
