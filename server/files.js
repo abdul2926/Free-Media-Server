@@ -40,8 +40,8 @@ async function gatherFiles(paths) {
 						if (supportedFormats.includes(fileType)) {
 							filesArr.push(filePath);
 						} else if (fileType == 'jpg' | 'jpeg' | 'png' | 'gif') {
-							fs.copyFile(filePath, `./img/${file}`, err => {
-								console.log(`Failed to copy file: ${err}`);
+							fs.copyFile(filePath, `./img/${file}`, () => {
+								filesArr.push(`./img/${file}`);
 							});
 							filesArr.push(`./img/${file}`);
 						}
@@ -69,8 +69,7 @@ function parseData(files) {
 		const fileSplit = file.split('.');
 		const fileType = fileSplit[fileSplit.length - 1];
 		if (fileType == 'jpg' | 'jpeg' | 'png' | 'gif') {
-			seriesBuffer.image = file;
-			return;
+			seriesBuffer.image = `${file}`;
 		} 
 
         if (seriesBuffer.name == null | seriesBuffer.name == '') {
@@ -80,10 +79,12 @@ function parseData(files) {
             if (seriesBuffer.name == seriesName) {
 				seriesBuffer.files.push(file);
             } else {
-                series.push(seriesBuffer);
-                seriesBuffer = resetBuffer();
-                seriesBuffer.name = seriesName;
-				seriesBuffer.files.push(file);
+				if (seriesName != 'img') {
+					series.push(seriesBuffer);
+                	seriesBuffer = resetBuffer();
+                	seriesBuffer.name = seriesName;
+					seriesBuffer.files.push(file);
+				}
             }
         }
 		if (i == files.length - 1) {

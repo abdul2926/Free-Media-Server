@@ -4,6 +4,7 @@ const errors = require('./error');
 const api = require('./api');
 const img = require('./img');
 var config = require('./config');
+const streamVideo = require('./stream');
 
 module.exports.handleRequest = handleRequest;
 
@@ -27,7 +28,16 @@ function handleRequest(request, response) {
 	}
 
 	if (path.startsWith('/series')) {
-		path = '/series';
+		if (path.split('/').length > 3) {
+			path = '/episode';
+		} else {
+			path = '/series';
+		}
+	}
+
+	if (path.startsWith('/video')) {
+		streamVideo(request, response);
+		return;
 	}
 
 	serveHTML(path, request, response);
@@ -56,7 +66,8 @@ let directs = new Map([
 	['/settings', 'settings.html'],
 	['/config', 'settings.html'],
 	['/login', 'login.html'],
-	['/series', 'series.html']
+	['/series', 'series.html'],
+	['/episode', 'episode.html']
 ]);
 
 function serveHTML(path, request, response) {

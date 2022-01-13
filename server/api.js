@@ -6,6 +6,7 @@ const files = require('./files');
 
 module.exports.handleAPIRequest = handleAPIRequest;
 module.exports.loggedIn = loggedIn;
+module.exports.getPath = getPath;
 
 function handleAPIRequest (request, response) {
 	switch (request.method) {
@@ -258,6 +259,9 @@ async function serveSeries(request, response) {
 	let path = getPath(request);
 	let pathSplit = path.split('/');
 	let id = pathSplit[pathSplit.length - 1];
+	if (pathSplit.length > 4) {
+		id = pathSplit[pathSplit.length - 2];
+	}
 
 	const library = await files.getLibrary();
 	const series = library.series[id];
