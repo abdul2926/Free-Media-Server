@@ -4,7 +4,7 @@ const errors = require('./error');
 const api = require('./api');
 const img = require('./img');
 var config = require('./config');
-const streamVideo = require('./stream');
+const video = require('./video');
 
 module.exports.handleRequest = handleRequest;
 
@@ -36,7 +36,7 @@ function handleRequest(request, response) {
 	}
 
 	if (path.startsWith('/video')) {
-		streamVideo(request, response);
+		video.stream(request, response);
 		return;
 	}
 
