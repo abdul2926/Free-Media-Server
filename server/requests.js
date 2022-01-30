@@ -8,6 +8,9 @@ const video = require('./video');
 
 module.exports.handleRequest = handleRequest;
 
+// Legacy: 'web'; Current: 'web2'
+const webVersion = 'web2';
+
 function handleRequest(request, response) {
 	let path = url.parse(request.url, true).pathname.replace('/localhost', '').replace('/127.0.0.1', '');
 
@@ -44,7 +47,7 @@ function handleRequest(request, response) {
 }
 
 function serveNonHTML(type, path, response) {
-	fs.readFile(`./web${path}`, function (error, data) {
+	fs.readFile(`./${webVersion}${path}`, function (error, data) {
 		if (error) {
 			response.writeHead(404, {
 				'Content-Type' : 'text/plain'
@@ -94,7 +97,7 @@ function serveHTML(path, request, response) {
 		}
 	}
 
-	fs.readFile(`./web/${directs.get(path)}`, function (error, data) {
+	fs.readFile(`./${webVersion}/${directs.get(path)}`, function (error, data) {
 		if (error) {
 			response.writeHead(404, {
 				'Content-Type' : 'text/plain'

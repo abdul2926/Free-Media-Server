@@ -41,7 +41,7 @@ async function stream(request, response) {
         let end = partend ? parseInt(partend, 10) : total - 1;
         let chunksize = (end - start) + 1;
 
-        let file = fs.createReadStream(path, {
+        var file = fs.createReadStream(path, {
             start: start,
             end: end
         });
@@ -55,7 +55,7 @@ async function stream(request, response) {
         response.openedFile = file;
         file.pipe(response);
     } else {
-        file = fs.createReadStream(path);
+        var file = fs.createReadStream(path);
         response.writeHead(200, {
             'Content-Length': total,
             'Content-Type': contentType

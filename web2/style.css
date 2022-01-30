@@ -1,0 +1,16 @@
+:root {
+    --color-bg: #1b1d21;
+    --color-bg2: #232426;
+    --color-bg3: #2e2f30;
+    --color-fg: #eaeaea;
+    --color-fg2: #e0e0e0;
+    --color-fg3: #cccccc;
+    --color-hl: #e53500;
+    font-family: sans-serif;
+    font-size: 16px;
+}
+
+html {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
