@@ -39,7 +39,7 @@ async function gatherFiles(paths) {
 						let fileType = fileSplit[fileSplit.length - 1];
 						if (supportedFormats.includes(fileType)) {
 							filesArr.push(filePath);
-						} else if (fileType == 'jpg' | 'jpeg' | 'png' | 'gif') {
+						} else if (fileType == 'jpg' || fileType == 'jpeg' || fileType == 'png' || fileType == 'gif') {
 							fs.copyFile(filePath, `./img/${file}`, () => {
 								filesArr.push(`./img/${file}`);
 							});
@@ -68,7 +68,7 @@ function parseData(files) {
 		
 		const fileSplit = file.split('.');
 		const fileType = fileSplit[fileSplit.length - 1];
-		if (fileType == 'jpg' | 'jpeg' | 'png' | 'gif') {
+		if (fileType == 'jpg' || fileType == 'jpeg' || fileType == 'png' || fileType == 'gif') {
 			seriesBuffer.image = `${file}`;
 		} 
 

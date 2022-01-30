@@ -1,3 +1,4 @@
+/* General */
 :root {
     --color-bg: #1b1d21;
     --color-bg2: #232426;
@@ -5,12 +6,183 @@
     --color-fg: #eaeaea;
     --color-fg2: #e0e0e0;
     --color-fg3: #cccccc;
-    --color-hl: #e53500;
+    --color-hl: #f95c57;
     font-family: sans-serif;
     font-size: 16px;
 }
 
 html {
     overflow-y: scroll;
-    overflow-x: hidden;
+    overflow: visible;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    background-color: var(--color-bg3);
+    color: var(--color-fg);
+}
+
+::selection {
+    background: var(--color-hl);
+    color: var(--color-bg3);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-hl);
+    border-radius: 20px;
+}
+
+/* Navigation bar */
+.navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-bg2);
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    opacity: 0.9;
+}
+
+.navbar li {
+    display: inline;
+    float: right;
+}
+
+.navbar li a {
+    display: block;
+    color: var(--color-fg2);
+    text-align: center;
+    text-decoration: none;
+    padding: .5rem .8rem;
+}
+
+.navbar li a:hover {
+    background-color: var(--color-hl);
+    color: var(--color-bg);
+    transition: .2s;
+}
+
+/* Input */
+input[type=text], input[type=password] {
+    background: var(--color-bg2);
+    border: none;
+    color: var(--color-fg3);
+    font-size: 16px;
+    outline: none;
+    border-radius: 2px;
+    padding-top: .2rem;
+    padding-bottom: .2rem;
+}
+
+input[type=button], input[type=submit] {
+    border: none;
+    outline: none;
+    background: var(--color-bg2);
+    border-radius: 2px;
+    color: var(--color-fg3);
+    font-size: 16px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: .2rem;
+    padding-bottom: .2rem;
+}
+
+input[type=button], input[type=submit]:hover {
+    background: var(--color-hl);
+    color: var(--color-bg);
+    transition: .2s;
+}
+
+input[type=checkbox] {
+    background: var(--color-bg2);
+}
+
+/* Library */
+#homeContent a {
+    text-decoration: none;
+    text-align: center;
+    margin-top: 3rem;
+    margin-left: 3rem;
+    overflow-x: visible;
+    display: grid;
+}
+
+.libItem {
+    height: 19.5rem;
+    width: 14rem;
+    background: var(--color-bg2);
+    border-radius: 10px;
+    text-decoration: none;
+    float: left;
+}
+
+.libItem:hover {
+    background: var(--color-hl);
+    transition: .2s;
+}
+
+.libItem:hover span {
+    color: var(--color-bg);
+    transition: .2s;
+}
+
+.libItem img {
+    height: 18rem;
+    width: 14rem;
+    border-radius: 10px;
+}
+
+.libItem span {
+    text-decoration: none;
+    font-size: 16px;
+    text-decoration: none;
+    color: var(--color-fg);
+}
+
+/* Settings */
+#settingsContent {
+    margin-top: 3rem;
+    margin-left: 3rem;
+    float: left;
+}
+
+#settingsContent input {
+    margin-top: .2rem;
+}
+
+/* Login */
+.loginContainer {
+    height: 6rem;
+    width: 20rem;
+    background: var(--color-bg3);
+    text-align: center;
+    vertical-align: middle;
+    margin: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.loginContainer input {
+    margin-top: .3rem;
+}
+
+#main-content-series {
+    margin-top: 3rem;
+    margin-left: 3rem;
+    float: left;
 }

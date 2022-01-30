@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Settings | Free Media Server</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="settings.js"></script>
+    </head>
+    <body onload="loadConfig()">
+        <ul class="navbar">
+            <li><a href="/settings">Settings</a></li>
+            <li><a href="/">Home</a></li>
+        </ul>
+        <form id="settingsContent" action="/api/update" method="post">
+            <label for="port">Port:</label>
+            <input name="port" type="text" id="port"> <br>
+            <label for="libraries">Libraries:</label>
+            <input name="libraries" type="text" id="libraries"> <br> <br>
+            <label for="lock">Password protection:</label>
+			<input name="lock" type="checkbox" id="lock"> <br>
+			<label for="password">New Password:</label>
+			<input name="password" type="password" id="password"> <br>
+            <input type="submit" value="Update Settings">
+        </form>
+    </body>
+</html>
