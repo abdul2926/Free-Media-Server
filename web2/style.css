@@ -122,7 +122,7 @@ input[type=checkbox] {
 
 .libItem {
     height: 19.5rem;
-    width: 14rem;
+    width: 13rem;
     background: var(--color-bg2);
     border-radius: 10px;
     text-decoration: none;
@@ -141,7 +141,7 @@ input[type=checkbox] {
 
 .libItem img {
     height: 18rem;
-    width: 14rem;
+    width: 13rem;
     border-radius: 10px;
 }
 
@@ -181,8 +181,47 @@ input[type=checkbox] {
     margin-top: .3rem;
 }
 
-#main-content-series {
+/* Series page */
+#seriesContent {
     margin-top: 3rem;
-    margin-left: 3rem;
+    margin-left: 5vw;
+    margin-right: 3rem;
+    width: 90vw;
     float: left;
+}
+
+#seriesContent a {
+    text-decoration: none;
+}
+
+#title {
+    font-size: 2rem;
+}
+
+.episodeItem {
+    text-decoration: none;
+    background: var(--color-bg2);
+    color: var(--color-fg2);
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-top: .15rem;
+    width: auto;
+}
+
+.episodeItem:hover {
+    background: var(--color-hl);
+    color: var(--color-bg);
+    transition: .2s;
+}
+
+/* Episode page */
+video {
+    margin-top: 4rem;
+    position: absolute;
+    height: calc(100vh*0.7);
+    width: calc(100vw*0.7);
+    left: 50%;
+    transform: translateX(-50%);
 }

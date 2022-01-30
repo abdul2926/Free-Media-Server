@@ -40,10 +40,7 @@ async function gatherFiles(paths) {
 						if (supportedFormats.includes(fileType)) {
 							filesArr.push(filePath);
 						} else if (fileType == 'jpg' || fileType == 'jpeg' || fileType == 'png' || fileType == 'gif') {
-							fs.copyFile(filePath, `./img/${file}`, () => {
-								filesArr.push(`./img/${file}`);
-							});
-							filesArr.push(`./img/${file}`);
+                            filesArr.push(filePath)
 						}
 					}
                 } else {
@@ -68,28 +65,39 @@ function parseData(files) {
 		
 		const fileSplit = file.split('.');
 		const fileType = fileSplit[fileSplit.length - 1];
-		if (fileType == 'jpg' || fileType == 'jpeg' || fileType == 'png' || fileType == 'gif') {
-			seriesBuffer.image = `${file}`;
+        const isImage = fileType == 'jpg' || fileType == 'jpeg' || fileType == 'png' || fileType == 'gif';
+		if (isImage) {
+			seriesBuffer.image = `${file}`
 		} 
 
-        if (seriesBuffer.name == null | seriesBuffer.name == '') {
+        if (seriesBuffer.name == null || seriesBuffer.name == '') {
             seriesBuffer.name = seriesName;
-			seriesBuffer.files.push(file);
+            if (!isImage) {
+                seriesBuffer.files.push(file);
+            }
         } else {
             if (seriesBuffer.name == seriesName) {
 				seriesBuffer.files.push(file);
+                seriesBuffer.files = seriesBuffer.files.sort((a, b) => a.localeCompare(b, undefined, {numeric: true, sensitivity: 'base'}));
             } else {
-				if (seriesName != 'img') {
-					series.push(seriesBuffer);
-                	seriesBuffer = resetBuffer();
-                	seriesBuffer.name = seriesName;
-					seriesBuffer.files.push(file);
-				}
+                if (series.name != 'img') {
+                    series.push(seriesBuffer);
+                    seriesBuffer = resetBuffer();
+                    seriesBuffer.name = seriesName;
+				    seriesBuffer.files.push(file);
+                }
             }
         }
 		if (i == files.length - 1) {
 			series.push(seriesBuffer);
 		}
+    });
+    series.forEach(function (serie, i) {
+        serie.files.forEach(file => {
+            if (file.includes('/img/')) {
+                series.pop(i);
+            }
+        });
     });
     return series;
 }

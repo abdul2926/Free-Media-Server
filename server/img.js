@@ -31,18 +31,15 @@ function handleGET(request, response) {
 	}
 
 	let path = url.parse(request.url, true).pathname.replace('/localhost', '').replace('/127.0.0.1', '');
-	pathSplit = path.split('/');
-	const file = pathSplit[pathSplit.length - 1];
-	serveImage(response, file);
+	serveImage(response, decodeURIComponent(path));
 }
 
 function serveImage (response, file) {
 	let fileSplit = file.split('.');
 	let fileType = fileSplit[fileSplit.length - 1];
 	if (fileType == 'jpg') fileType = 'jpeg';
-	let path = `./img/${file}`;
 
-	var rs = fs.createReadStream(path);
+	var rs = fs.createReadStream(file);
 	rs.on('open', function() {
 		response.writeHead(200, {
 			'Content-Type' : `image/${fileType}`

@@ -15,7 +15,7 @@ function loadSeries() {
 }
 
 function setData(data) {
-	let container = document.getElementById('main-content-series');
+	let container = document.getElementById('seriesContent');
 	let content = container.innerHTML;
 	let seriesId = document.location.pathname.split('/');
 	seriesId = seriesId[seriesId.length - 1];	
@@ -25,7 +25,7 @@ function setData(data) {
 		name = name[name.length - 1];
 		content += `
 		<a href="/series/${seriesId}/${i}">
-		<div class="episodeEntry">
+		<div class="episodeItem">
 		${name}
 		</div>
 		</a>
@@ -33,6 +33,6 @@ function setData(data) {
 	});
 	container.innerHTML = content;
 
-	let header = document.getElementById('title');
-	header.innerHTML = data.name;
+	let title = document.getElementById('title');
+	title.innerHTML = data.name;
 }

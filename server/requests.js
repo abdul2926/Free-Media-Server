@@ -8,7 +8,6 @@ const video = require('./video');
 
 module.exports.handleRequest = handleRequest;
 
-// Legacy: 'web'; Current: 'web2'
 const webVersion = 'web2';
 
 function handleRequest(request, response) {
@@ -19,14 +18,19 @@ function handleRequest(request, response) {
 		return;
 	}
 
-	if (path.startsWith('/img')) {
-		img.handleIMGRequest(request, response);
+	//if (path.startsWith('/img')) {
+	//	img.handleIMGRequest(request, response);
+	//	return;
+	//}
+
+	let filetype = path.split('.').slice(-1);
+	if (filetype && filetype == 'css' || filetype == 'js') {
+		serveNonHTML(filetype, path, response);
 		return;
 	}
 
-	let filetype = path.split('.').slice(-1);
-	if (filetype && filetype == 'css' | filetype == 'js') {
-		serveNonHTML(filetype, path, response);
+	if (filetype == 'jpg' || filetype == 'jpeg' || filetype == 'png' || filetype == 'gif') {
+		img.handleIMGRequest(request, response);
 		return;
 	}
 
