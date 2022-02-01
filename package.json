@@ -1,10 +1,11 @@
 {
   "name": "free-media-server",
-  "version": "0.0.2",
-  "description": "Free Media Server (name pending) is a lightweight, easy to use and minimal media server for your local network.",
+  "version": "0.0.3",
+  "description": "Free Media Server is a lightweight, easy to use and minimal media server for your local network.",
   "main": "./server/index.js",
   "scripts": {
-    "start" : "node ./server/index.js"
+    "start" : "node ./server/index.js",
+    "test" : "node ./test.js"
   },
   "author": "abdul2926",
   "license": "MIT"

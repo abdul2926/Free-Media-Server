@@ -4,6 +4,7 @@ const config = require('./config');
 // TODO: add function to return library without indexing
 
 module.exports.getLibrary = indexLibrary;
+module.exports.gatherFiles = gatherFiles;
 
 const supportedFormats = [
 	'mp4',
@@ -27,6 +28,9 @@ async function indexLibrary() {
 
 async function gatherFiles(paths) {
     let filesArr = [];
+    if (typeof paths === 'string') {
+        paths = [paths];
+    }
     for (const path of paths) {
         try {
             const files = await fs.promises.readdir(path);
